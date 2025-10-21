@@ -21,7 +21,7 @@ export default function StreamPublisher() {
         // Access the local webcam
         const localTrack = await createLocalVideoTrack({
           deviceId: undefined,
-          resolution: { width: 3840, height: 2180 },
+          resolution: { width: 1920, height: 1080 },
           facingMode: "user",
         });
 
@@ -34,13 +34,12 @@ export default function StreamPublisher() {
           name: "usb_camera_stream",
           simulcast: false,
           videoCodec: "h264",
+          degradationPreference: "maintain-resolution",
           videoEncoding: {
             maxBitrate: 25_000_000,
             maxFramerate: 30,
           },
         });
-
-        console.log("Publishing USB camera to LiveKit");
       } catch (err) {
         console.error("Error:", err);
       }
@@ -48,13 +47,11 @@ export default function StreamPublisher() {
 
     return () => {
       roomRef.current?.disconnect();
-      console.log("Disconnected from LiveKit");
     };
   }, []);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h3>Publishing local USB camera → LiveKit</h3>
       <video
         ref={videoRef}
         autoPlay
